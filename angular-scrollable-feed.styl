@@ -1,0 +1,54 @@
+scrollbar-width = 8px
+scrollbar-border-radius = 4px
+scrollbar-opacity = 0.7
+thumb-color = rgb(127, 127, 127)
+track-color = rgb(229, 229, 229)
+thumb-min-height = 20px
+
+.asf-viewport
+  position absolute
+  top 0
+  bottom 0
+  right 0
+  left 0
+  overflow hidden
+
+.asf-content
+  display inline-block
+  overflow-y scroll
+  position absolute
+  top 0
+  bottom 0
+  left 0
+
+.asf-sb
+  display inline-block
+  width scrollbar-width
+  position absolute
+  top 0
+  bottom 0
+  right 0
+
+.asf-sb-track
+  border-radius scrollbar-border-radius
+  opacity scrollbar-opacity
+  background-color track-color
+  position absolute
+  top 0
+  bottom 0
+  left 0
+  right 0
+
+.asf-sb-thumb
+  position absolute
+  border-radius scrollbar-border-radius
+  background-color thumb-color
+  left 0
+  right 0
+  min-height thumb-min-height
+
+.asf-sb-thumb:hover
+  background-color darken(thumb-color, 10%)
+
+.asf-sb-thumb-active
+  background-color darken(thumb-color, 20%) !important
