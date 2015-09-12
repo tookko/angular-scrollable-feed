@@ -44,7 +44,7 @@ angular.module 'scrollableFeed', []
     $scope.unlock = ->
       if $scope.autoScroll
         $scope.locked = false
-        $scope.position = $scope.bottom - $scope.visibleHeight
+        $scope.position = $scope.bottom + $scope.visibleHeight
 
     $scope.hideScrollBar = ->
       if $scope.autoHide then $scope.hidden = true
@@ -53,7 +53,7 @@ angular.module 'scrollableFeed', []
       if $scope.visibleHeight < $scope.bottom then $scope.hidden = false
 
     $scope.atBottom = () ->
-      return $scope.position + $scope.visibleHeight >= $scope.bottom
+      return $scope.position + $scope.visibleHeight >= $scope.bottom - 1
 
   restrict: 'A'
   scope:
