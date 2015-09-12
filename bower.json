@@ -23,7 +23,7 @@
     "src"
   ],
   "dependencies": {
-    "angular": "~1.4.5",
+    "angular": "~1.4.5"
   },
   "repository": {
     "type": "git",
