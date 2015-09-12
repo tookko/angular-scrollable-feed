@@ -224,7 +224,6 @@ angular.module('scrollableFeed', []).directive('scrollableFeed', [
           }
         };
         scope.$watch('position', function() {
-          console.log('watch updating position to ' + scope.position);
           scope.position = Math.max(Math.min(scope.position, Number(content.prop('scrollHeight')) - scope.visibleHeight), 0);
           content.prop('scrollTop', scope.position);
           if (!scope.dragging && scope.atBottom()) {

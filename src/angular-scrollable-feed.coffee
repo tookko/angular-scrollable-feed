@@ -164,7 +164,6 @@ angular.module 'scrollableFeed', []
       if $event.button == 0 then do $event.stopPropagation
 
     scope.$watch 'position', ->
-      console.log 'watch updating position to ' + scope.position
       scope.position = Math.max (Math.min scope.position, Number(content.prop 'scrollHeight') - scope.visibleHeight), 0
       content.prop 'scrollTop', scope.position
       if not scope.dragging and do scope.atBottom
