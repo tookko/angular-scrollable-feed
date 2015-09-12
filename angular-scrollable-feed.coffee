@@ -28,7 +28,7 @@ angular.module 'scrollableFeed', []
     $scope.visibleHeight = 0
     $scope.position = 0
     $scope.hidden = $scope.autoHide
-    $scope.frozen = not $scope.autoScroll
+    $scope.locked = not $scope.autoScroll
 
     $scope.resizeScrollBar = ->
       scaledHeight = Math.round $scope.visibleHeight / $scope.bottom * $scope.visibleHeight
@@ -38,12 +38,12 @@ angular.module 'scrollableFeed', []
     $scope.scrollToBottom = ->
       $scope.position = $scope.bottom - $scope.visibleHeight
 
-    $scope.freeze = ->
-      $scope.frozen = true
+    $scope.lock = ->
+      $scope.locked = true
 
-    $scope.unfreeze = ->
+    $scope.unlock = ->
       if $scope.autoScroll
-        $scope.frozen = false
+        $scope.locked = false
         $scope.position = $scope.bottom - $scope.visibleHeight
 
     $scope.hideScrollBar = ->
@@ -53,7 +53,7 @@ angular.module 'scrollableFeed', []
       if $scope.visibleHeight < $scope.bottom then $scope.hidden = false
 
     $scope.atBottom = () ->
-      return $scope.position + $scope.visibleHeight == $scope.bottom
+      return $scope.position + $scope.visibleHeight >= $scope.bottom
 
   restrict: 'A'
   scope:
@@ -63,12 +63,22 @@ angular.module 'scrollableFeed', []
   templateUrl: 'angular-scrollable-feed/angular-scrollable-feed.html'
   link: (scope, element) ->
     timer = null
+    deferred = null
     dragStart = 0
     viewport = element.children().eq 0
     content = viewport.children().eq 0
     scrollbar = viewport.children().eq 1
     track = scrollbar.children().eq 0
     thumb = track.children().eq 0
+
+    debounce = (callback, delay) ->
+      context = this
+      args = arguments
+      if deferred then $timeout.cancel deferred
+      deferred = $timeout ->
+        deferred = null
+        callback.apply context, args
+      , delay
 
     resetDimensions = ->
       scope.visibleHeight = Number(content.prop 'clientHeight')
@@ -81,7 +91,7 @@ angular.module 'scrollableFeed', []
       if scope.dragging and $event.button == 0
         $timeout ->
           scope.dragging = false
-        if do scope.atBottom then do scope.unfreeze
+        if do scope.atBottom then do scope.unlock
         do hideWithDelay
 
     dragThumb = ($event) ->
@@ -95,20 +105,21 @@ angular.module 'scrollableFeed', []
         do $event.preventDefault
 
     scrollContent = ->
-      unless scope.dragging then scope.$apply ->
-        scope.position = content.prop 'scrollTop'
-        unless do scope.atBottom then do scope.freeze
+      unless scope.dragging
+        debounce ->
+          scope.position = content.prop 'scrollTop'
+        , 20
 
     clickViewport = ($event) ->
       if $event.button == 0 and not scope.dragging then $timeout ->
         unless do $window.getSelection().toString
-          do scope.unfreeze
+          do scope.unlock
           do scope.hideScrollBar
 
     releaseOnPaste = ->
       do $window.getSelection().empty
       scope.$apply ->
-        do scope.unfreeze
+        do scope.unlock
         do scope.hideScrollBar
 
     showWithDelay = ->
@@ -130,43 +141,45 @@ angular.module 'scrollableFeed', []
         scope.$apply ->
           scope.dragging = true
         dragStart = Number $event.pageY
-        do scope.freeze
+        do scope.lock
         do $event.stopPropagation
+        do $event.preventDefault
 
     paginate = ($event) ->
       if $event.button == 0
-        do scope.freeze
+        do scope.lock
         scope.$apply ->
           if $event.offsetY < scope.thumbTop
             scope.position -= scope.visibleHeight
           else
             scope.position += scope.visibleHeight
-        if do scope.atBottom then do scope.unfreeze
+        if do scope.atBottom then do scope.unlock
         do $event.stopPropagation
 
     selectContent = ($event) ->
       if $event.button == 0
-        do scope.freeze
+        do scope.lock
 
     clickScrollbar = ($event) ->
       if $event.button == 0 then do $event.stopPropagation
 
     scope.$watch 'position', ->
+      console.log 'watch updating position to ' + scope.position
       scope.position = Math.max (Math.min scope.position, Number(content.prop 'scrollHeight') - scope.visibleHeight), 0
       content.prop 'scrollTop', scope.position
-      do scope.resizeScrollBar
       if not scope.dragging and do scope.atBottom
         do scope.hideScrollBar
       else
         do scope.showScrollBar
+        do scope.lock
 
     scope.$watch ->
       scope.bottom = Number(content.prop 'scrollHeight')
       scope.visibleHeight = Number(content.prop 'clientHeight')
       do scope.resizeScrollBar
-      not scope.frozen and not scope.dragging and not do scope.atBottom
+      not scope.locked and not scope.dragging and not do scope.atBottom
     , ->
-      do scope.unfreeze
+      do scope.unlock
 
     $document.on 'paste', releaseOnPaste
     $document.on 'mouseup', releaseThumb
@@ -198,6 +211,6 @@ angular.module 'scrollableFeed', []
 
     $timeout ->
       do resetDimensions
-      do scope.unfreeze
+      do scope.unlock
       do scope.hideScrollBar
 ]

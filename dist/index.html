@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="demo">
+  <head>
+    <meta charset="UTF-8">
+    <title>Test Page</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+    <script src="angular-scrollable-feed.js"></script>
+    <link href="angular-scrollable-feed.css" rel="stylesheet">
+    <script>
+      angular.module('demo', ['scrollableFeed']).controller('DemoController', [
+          '$scope', '$interval', function ($scope, $interval) {
+              $scope.rows = [];
+              $interval(function () {
+                      if ($scope.rows.length > 20) {
+                          $scope.rows.shift();
+                      }
+                      $scope.rows.push(Math.random().toString(36).substring(2));
+              }, 2000);
+          }
+      ]);
+    </script>
+  </head>
+  <body ng-controller="DemoController">
+    <div scrollable-feed style="width:800px; height:100px; background-color:green">
+      <div ng-repeat="row in rows" ng-bind="::row"></div>
+    </div>
+  </body>
+</html>

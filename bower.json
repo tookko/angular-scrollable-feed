@@ -1,7 +1,5 @@
-
 {
   "name": "angular-scrollable-feed",
-  "version": "0.0.0",
   "description": "Custom scrollbar directive for live feeds with automated scrolling to bottom unless text is being copied.",
   "keywords": [
     "angular",
@@ -10,15 +8,27 @@
   "authors": [
     "Sampsa Tuokko"
   ],
+  "main": [
+    "dist/angular-scrollable-feed.js",
+    "dist/angular-scrollable-feed.css"
+  ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
-    "node_modules",
+    "dist/libs",
+    "dist/index.html",
     "bower_components",
-    "test",
-    "tests"
+    "node_modules",
+    ".*",
+    "*.coffee",
+    "*.jade",
+    "*.styl",
+    "*.md"
   ],
   "dependencies": {
     "angular": "~1.4.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tookko/angular-scrollable-feed.git"
   }
 }
