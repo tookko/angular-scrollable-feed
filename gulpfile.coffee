@@ -43,14 +43,14 @@ gulp.task 'css', ->
   .pipe gulp.dest './dist'
   .on 'error', util.log
 
-# Copy libs
-gulp.task 'libs', ->
-  gulp.src './bower_components/**/*.js'
-  .pipe gulp.dest './dist/libs'
+# Compile for bower
+gulp.task 'bower', ['coffee', 'css'], ->
+  gulp.src ['dist/*.css', 'dist/*.js']
+  .pipe gulp.dest '.'
   .on 'error', util.log
 
 # Create dist
-gulp.task 'dist', ['coffee', 'css', 'templates', 'libs']
+gulp.task 'dist', ['coffee', 'css', 'templates']
 
 # clean up public directory
 gulp.task 'clean', (cb) ->

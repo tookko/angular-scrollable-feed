@@ -9,13 +9,12 @@
     "Sampsa Tuokko"
   ],
   "main": [
-    "dist/angular-scrollable-feed.js",
-    "dist/angular-scrollable-feed.css"
+    "angular-scrollable-feed.js",
+    "angular-scrollable-feed.css"
   ],
   "license": "MIT",
   "ignore": [
-    "dist/libs",
-    "dist/index.html",
+    "dist",
     "bower_components",
     "node_modules",
     ".*",
