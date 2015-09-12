@@ -14,17 +14,16 @@
   ],
   "license": "MIT",
   "ignore": [
-    "dist",
-    "bower_components",
+    ".gitignore",
+    "demo",
+    "gulpfile.coffee",
     "node_modules",
-    ".*",
-    "*.coffee",
-    "*.jade",
-    "*.styl",
-    "*.md"
+    "package.json",
+    "README.md",
+    "src"
   ],
   "dependencies": {
-    "angular": "~1.4.3"
+    "angular": "~1.4.5",
   },
   "repository": {
     "type": "git",

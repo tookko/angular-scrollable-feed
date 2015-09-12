@@ -16,9 +16,9 @@ gulp.task 'default', ['coffee', 'templates', 'css'], ->
 # Brew some coffee
 gulp.task 'coffee', ->
   es.merge(
-    gulp.src './angular-scrollable-feed.coffee'
+    gulp.src 'src/angular-scrollable-feed.coffee'
     .pipe coffee bare: true
-    gulp.src './angular-scrollable-feed.jade'
+    gulp.src 'src/angular-scrollable-feed.jade'
     .pipe jade pretty: true
     .pipe templateCache
       module: 'scrollableFeed'
@@ -26,27 +26,29 @@ gulp.task 'coffee', ->
       transformUrl: (url) -> url.replace /\.jade$/, '.html')
   .pipe do sort
   .pipe concat 'angular-scrollable-feed.js'
-  .pipe gulp.dest './dist'
-  .on 'error', util.log
-
-# Compile documents
-gulp.task 'templates', ->
-  gulp.src './index.jade'
-  .pipe jade pretty: true
-  .pipe gulp.dest './dist'
+  .pipe gulp.dest '.'
   .on 'error', util.log
 
 # Compile stylesheets
 gulp.task 'css', ->
-  gulp.src './angular-scrollable-feed.styl'
+  gulp.src 'src/angular-scrollable-feed.styl'
   .pipe stylus()
-  .pipe gulp.dest './dist'
+  .pipe gulp.dest '.'
   .on 'error', util.log
 
-# Compile for bower
-gulp.task 'bower', ['coffee', 'css'], ->
-  gulp.src ['dist/*.css', 'dist/*.js']
-  .pipe gulp.dest '.'
+# Compile documents
+gulp.task 'templates', ->
+  gulp.src 'src/index.jade'
+  .pipe jade pretty: true
+  .pipe gulp.dest './demo'
+  .on 'error', util.log
+
+gulp.task 'demo', ['coffee', 'css', 'templates'], ->
+  gulp.src [
+    'angular-scrollable-feed.css',
+    'angular-scrollable-feed.js'
+  ]
+  .pipe gulp.dest './demo'
   .on 'error', util.log
 
 # Create dist
@@ -54,4 +56,4 @@ gulp.task 'dist', ['coffee', 'css', 'templates']
 
 # clean up public directory
 gulp.task 'clean', (cb) ->
-  del ['public'], cb
+  del ['demo', 'angular-scrollable-feed.css', 'angular-scrollable-feed.js'], cb
