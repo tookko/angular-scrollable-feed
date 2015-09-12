@@ -60,7 +60,7 @@ angular.module('scrollableFeed', []).directive('scrollableFeed', [
         $scope.unlock = function() {
           if ($scope.autoScroll) {
             $scope.locked = false;
-            return $scope.position = $scope.bottom - $scope.visibleHeight;
+            return $scope.position = $scope.bottom + $scope.visibleHeight;
           }
         };
         $scope.hideScrollBar = function() {
@@ -74,7 +74,7 @@ angular.module('scrollableFeed', []).directive('scrollableFeed', [
           }
         };
         return $scope.atBottom = function() {
-          return $scope.position + $scope.visibleHeight >= $scope.bottom;
+          return $scope.position + $scope.visibleHeight >= $scope.bottom - 1;
         };
       },
       restrict: 'A',
