@@ -44,7 +44,7 @@ angular.module 'scrollableFeed', []
     $scope.unlock = ->
       if $scope.autoScroll
         $scope.locked = false
-        $scope.position = $scope.bottom + $scope.visibleHeight
+        do $scope.scrollToBottom
 
     $scope.hideScrollBar = ->
       if $scope.autoHide then $scope.hidden = true
@@ -53,7 +53,7 @@ angular.module 'scrollableFeed', []
       if $scope.visibleHeight < $scope.bottom then $scope.hidden = false
 
     $scope.atBottom = () ->
-      return $scope.position + $scope.visibleHeight >= $scope.bottom - 1
+      return $scope.position + $scope.visibleHeight >= $scope.bottom
 
   restrict: 'A'
   scope:
@@ -164,10 +164,11 @@ angular.module 'scrollableFeed', []
       if $event.button == 0 then do $event.stopPropagation
 
     scope.$watch 'position', ->
-      scope.position = Math.max (Math.min scope.position, Number(content.prop 'scrollHeight') - scope.visibleHeight), 0
+      scope.position = Math.max (Math.min scope.position, scope.bottom - scope.visibleHeight), 0
       content.prop 'scrollTop', scope.position
       if not scope.dragging and do scope.atBottom
         do scope.hideScrollBar
+        do scope.unlock
       else
         do scope.showScrollBar
         do scope.lock

@@ -60,7 +60,7 @@ angular.module('scrollableFeed', []).directive('scrollableFeed', [
         $scope.unlock = function() {
           if ($scope.autoScroll) {
             $scope.locked = false;
-            return $scope.position = $scope.bottom + $scope.visibleHeight;
+            return $scope.scrollToBottom();
           }
         };
         $scope.hideScrollBar = function() {
@@ -74,7 +74,7 @@ angular.module('scrollableFeed', []).directive('scrollableFeed', [
           }
         };
         return $scope.atBottom = function() {
-          return $scope.position + $scope.visibleHeight >= $scope.bottom - 1;
+          return $scope.position + $scope.visibleHeight >= $scope.bottom;
         };
       },
       restrict: 'A',
@@ -224,10 +224,11 @@ angular.module('scrollableFeed', []).directive('scrollableFeed', [
           }
         };
         scope.$watch('position', function() {
-          scope.position = Math.max(Math.min(scope.position, Number(content.prop('scrollHeight')) - scope.visibleHeight), 0);
+          scope.position = Math.max(Math.min(scope.position, scope.bottom - scope.visibleHeight), 0);
           content.prop('scrollTop', scope.position);
           if (!scope.dragging && scope.atBottom()) {
-            return scope.hideScrollBar();
+            scope.hideScrollBar();
+            return scope.unlock();
           } else {
             scope.showScrollBar();
             return scope.lock();
